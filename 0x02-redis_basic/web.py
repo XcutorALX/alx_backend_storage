@@ -20,14 +20,15 @@ import requests
 from typing import Callable
 from functools import wraps
 
-r = redis.Redis()
+store = redis.Redis()
 
 
 def url_access_count(method: Callable) -> Callable:
     """decorator for get_page function"""
     @wraps(method)
-    def wrapper(url: str):
+    def wrapper(url: str) -> str:
         """wrapper function"""
+
         cached_key = "cached:" + url
         cached_data = store.get(cached_key)
         if cached_data:
