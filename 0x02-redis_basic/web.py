@@ -35,7 +35,7 @@ def url_access_count(method: Callable) -> Callable:
         if cached_data:
             return cached_data.decode("utf-8")
 
-        count_key = "count:" + url
+        count_key = "count:" + "{" + url + "}"
         html = method(url)
 
         store.incr(count_key)
