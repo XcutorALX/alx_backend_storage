@@ -17,22 +17,29 @@ a slow response and test your caching."""
 
 import redis
 import requests
+from typing import Callable
 from functools import wraps
 
 r = redis.Redis()
 
 
-def url_access_count(method):
+def url_access_count(method: Callable) -> Callable:
     """decorator for get_page function"""
     @wraps(method)
-    def wrapper(*args, **kwargs):
-        url = args[0]
-        redis_client.incr(f"count:{url}")
-        cached = redis_client.get(f'{url}')
-        if cached:
-            return cached.decode('utf-8')
-        redis_client.setex(f'{url}, 10, {method(url)}')
-        return method(*args, **kwargs)
+    def wrapper(url: str):
+        """wrapper function"""
+        cached_key = "cached:" + url
+        cached_data = store.get(cached_key)
+        if cached_data:
+            return cached_data.decode("utf-8")
+
+        count_key = "count:" + url
+        html = method(url)
+
+        store.incr(count_key)
+        store.set(cached_key, html)
+        store.expire(cached_key, 10)
+        return html
     return wrapper
 
 
