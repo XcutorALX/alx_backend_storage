@@ -32,12 +32,14 @@ class Cache:
     """
 
     def __init__(self):
+        """Init method"""
         self._redis = redis.Redis()
 
         self._redis.flushdb()
 
     @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
+        """store method"""
         key = str(uuid.uuid1())
 
         self._redis.set(key, data)
@@ -45,7 +47,7 @@ class Cache:
         return (key)
 
     def get(self, key: str, fn: callable = None):
-
+        """get method"""
         data = self._redis.get(key)
 
         if fn and data is not None:
@@ -54,11 +56,13 @@ class Cache:
         return data
 
     def get_str(self, key: str) -> str:
+        """get str method"""
         data = self._redis.get(key)
 
         return data.decode('UTF-8')
 
     def get_int(self, key: str) -> int:
+        """get int method"""
         data = self._redis.get(key)
 
         try:
