@@ -29,7 +29,7 @@ def url_access_count(method: Callable) -> Callable:
     def wrapper(url: str) -> str:
         """wrapper function"""
 
-        cached_key = "cached:" + url
+        cached_key = url
         cached_data = store.get(cached_key)
         if cached_data:
             return cached_data.decode("utf-8")
