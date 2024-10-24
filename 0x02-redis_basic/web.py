@@ -21,6 +21,7 @@ from typing import Callable
 from functools import wraps
 
 store = redis.Redis()
+store.flushdb()
 
 
 def url_access_count(method: Callable) -> Callable:
