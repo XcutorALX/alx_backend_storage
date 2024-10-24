@@ -10,10 +10,17 @@ from functools import wraps
 
 
 def count_calls(method: callable) -> callable:
+    """count calls function
+    this function increments a key of the function name
+    using redis everytime the function is called
+    """
+
     key = method.__qualname__
 
     @wraps(method)
-    def wrapper(self, *args, **kwargs) -> str:
+    def wrapper(self, *args, **kwargs):
+        """wrapper function
+        """
         self._redis.incr(key)
         return method(self, *args, **kwargs)
 
