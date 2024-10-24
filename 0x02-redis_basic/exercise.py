@@ -23,3 +23,27 @@ class Cache:
         self._redis.set(key, data)
 
         return (key)
+
+    def get(self, key: str, fn: callable):
+
+        data = self._redis.get(key)
+
+        if fn:
+            data = fn(data)
+
+        return data
+
+    def get_str(self, key: str) -> str:
+        data = self._redis.get(key)
+
+        return data.decode('UTF-8')
+
+    def get_int(self, key: str) -> int:
+        data = self._redis.get(key)
+
+        try:
+            data = int(data.decode('UTF-8'))
+        except Exception:
+            data = 0
+
+        return data
