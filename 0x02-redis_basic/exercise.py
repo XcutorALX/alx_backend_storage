@@ -24,11 +24,11 @@ class Cache:
 
         return (key)
 
-    def get(self, key: str, fn: callable):
+    def get(self, key: str, fn: callable = None):
 
         data = self._redis.get(key)
 
-        if fn:
+        if fn and data is not None:
             data = fn(data)
 
         return data
